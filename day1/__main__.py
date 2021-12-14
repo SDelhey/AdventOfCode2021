@@ -1,4 +1,4 @@
-filename = 'data'
+filename = 'data.txt'
 
 # Part 1
 with open(filename) as file:
