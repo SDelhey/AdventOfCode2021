@@ -73,7 +73,7 @@ def create_boards_from_file(lines):
     return boards
 
 
-def get_score_of_winning_board(boards, instructions):
+def get_score_of_first_winning_board(boards, instructions):
     for i in range(len(instructions)):
         for board in boards:
             result = board.check_board(instructions[0:i+1])
@@ -83,11 +83,42 @@ def get_score_of_winning_board(boards, instructions):
                 return score
 
 
+# Part 1
+
 with open(filename) as file:
     lines = file.readlines()
     instructions = list(map(int, lines[0].split(',')))
     boards = create_boards_from_file(lines[2:])
-    score = get_score_of_winning_board(boards, instructions)
+    score = get_score_of_first_winning_board(boards, instructions)
     print(score)
 
 
+def get_score_of_last_winning_board(boards, instructions):
+    last_winning_board: BingoBoard = None
+    last_winning_instructions = None
+    winners = 0
+    original_board_length = len(boards)
+
+    for i in range(len(instructions)):
+        for board in boards:
+            result = board.check_board(instructions[0:i+1])
+
+            if result is True:
+                winners += 1
+                last_winning_board = board
+                last_winning_instructions = instructions[0:i+1]
+                boards.remove(board)
+
+
+        if winners >= original_board_length:
+            break
+
+    return last_winning_board.get_score(last_winning_instructions)
+
+# Part 2
+with open(filename) as file:
+    lines = file.readlines()
+    instructions = list(map(int, lines[0].split(',')))
+    boards = create_boards_from_file(lines[2:])
+    score = get_score_of_last_winning_board(boards, instructions)
+    print(score)
